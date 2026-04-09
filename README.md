@@ -58,4 +58,4 @@ Binary format (`.dat`):
 
 Primary maintainer: Oren Kagan
 
-Additional group contributor names will be added after they confirm participation in this shared repo.
+Additional group contributor: Charlie Davis
