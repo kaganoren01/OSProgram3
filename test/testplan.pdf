@@ -1,0 +1,252 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+4 0 obj
+<< /Length 2597 >>
+stream
+BT
+/F1 10 Tf
+72 750 Td
+(Right Triangles Program 3 - Test Plan) Tj
+0 -12 Td
+(======================================) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Program Overview) Tj
+0 -12 Td
+(----------------) Tj
+0 -12 Td
+(Counts right triangles from a set of 2D points using direction vectors.) Tj
+0 -12 Td
+(Uses PointStore abstraction to support text and binary input formats.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Files:) Tj
+0 -12 Td
+(- Triangles.java: Single-process baseline) Tj
+0 -12 Td
+(- ProcessTriangles.java: Multi-process coordinator \(uses pipes for IPC\)) Tj
+0 -12 Td
+(- ThreadTriangles.java: Multi-thread version \(uses shared memory\)) Tj
+0 -12 Td
+(- SingleProcessTriangleCounter.java: Child process worker) Tj
+0 -12 Td
+(- PointStore.java: Storage interface) Tj
+0 -12 Td
+(- TextPointStore.java: Text-encoded point reader) Tj
+0 -12 Td
+(- BinPointStore.java: Binary-encoded point reader \(memory-mapped I/O\)) Tj
+0 -12 Td
+(- TrianglesUtils.java: Shared algorithm \(O\(n^2\)\)) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Exit Codes: 1 = usage error, 2 = file error, 3 = format error) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Test Cases) Tj
+0 -12 Td
+(----------) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Functional Tests \(Text Encoding\):) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(  Test File                  | Points | Expected | Description) Tj
+0 -12 Td
+(  ---------------------------|--------|----------|---------------------------) Tj
+0 -12 Td
+(  single_right_triangle.txt  |   3    |    1     | Minimum valid case) Tj
+0 -12 Td
+(  square_points.txt          |   4    |    4     | Square corners) Tj
+0 -12 Td
+(  test_spec_list.txt         |   5    |    4     | Professor's test) Tj
+0 -12 Td
+(  test_long_list.txt         |  5000  |  32909   | Large dataset) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Functional Tests \(Binary Encoding\):) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(  Test File                  | Points | Expected | Description) Tj
+0 -12 Td
+(  ---------------------------|--------|----------|---------------------------) Tj
+0 -12 Td
+(  single_right_triangle.dat  |   3    |    1     | Binary version of 3-point case) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Running Tests) Tj
+0 -12 Td
+(-------------) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Compile:) Tj
+0 -12 Td
+(  javac com/tryright/*.java) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Single-process:) Tj
+0 -12 Td
+(  java com.tryright.Triangles test/<testfile>) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Multi-process:) Tj
+0 -12 Td
+(  java com.tryright.ProcessTriangles test/<testfile> <num_processes>) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Multi-thread:) Tj
+0 -12 Td
+(  java com.tryright.ThreadTriangles test/<testfile> <num_threads>) Tj
+0 -12 Td
+() Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 2 0 R >> >> /Contents 3 0 R >>>>
+endobj
+6 0 obj
+<< /Length 2201 >>
+stream
+BT
+/F1 10 Tf
+72 750 Td
+(Example:) Tj
+0 -12 Td
+(  java com.tryright.ProcessTriangles test/test_long_list.txt 8) Tj
+0 -12 Td
+(  java com.tryright.ThreadTriangles test/test_long_list.txt 8) Tj
+0 -12 Td
+(  java com.tryright.Triangles test/single_right_triangle.dat) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Performance Results - test_long_list.txt \(5000 points\)) Tj
+0 -12 Td
+(------------------------------------------------------) Tj
+0 -12 Td
+(Tested on Windows \(8 logical cores\)) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(  Workers | Process \(s\) | Thread \(s\) | Thread Speedup) Tj
+0 -12 Td
+(  --------|-------------|------------|---------------) Tj
+0 -12 Td
+(      1   |     8.59    |     8.38   |    1.02x) Tj
+0 -12 Td
+(      2   |     4.68    |     4.53   |    1.03x) Tj
+0 -12 Td
+(      4   |     3.10    |     2.95   |    1.05x) Tj
+0 -12 Td
+(      8   |     3.22    |     2.41   |    1.34x) Tj
+0 -12 Td
+(     16   |     3.72    |     2.75   |    1.35x) Tj
+0 -12 Td
+(     32   |     3.97    |     2.76   |    1.44x) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Analysis) Tj
+0 -12 Td
+(--------) Tj
+0 -12 Td
+(Threads outperform processes at higher worker counts due to:) Tj
+0 -12 Td
+(1. No JVM startup overhead per worker) Tj
+0 -12 Td
+(2. No pipe serialization \(processes send all points via stdin\)) Tj
+0 -12 Td
+(3. Direct shared memory access vs IPC) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(At low worker counts \(1-2\), overhead differences are minimal.) Tj
+0 -12 Td
+(At higher counts \(8+\), threads show 30-45% improvement.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Processes degrade at high worker counts \(e.g. 32 processes = 13.3s vs 4.5s) Tj
+0 -12 Td
+(for threads on 5000 points\) due to cumulative JVM startup and pipe overhead.) Tj
+0 -12 Td
+(Threads remain flat because shared memory has no per-worker IPC cost.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Optimal configuration: 8 threads \(matches CPU logical cores, best performance\)) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Binary Format Verification) Tj
+0 -12 Td
+(--------------------------) Tj
+0 -12 Td
+(Binary input files \(.dat\) are parsed using BinPointStore and MMIO. Results are) Tj
+0 -12 Td
+(verified by comparing .dat output to the equivalent .txt test \(single_right_triangle\).) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 2 0 R >> >> /Contents 5 0 R >>>>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000000 00000 n 
+0000000009 00000 n 
+0000000017 00000 n 
+0000000051 00000 n 
+0000000058 00000 n 
+0000000066 00000 n 
+0000000116 00000 n 
+0000000123 00000 n 
+0000000131 00000 n 
+0000000184 00000 n 
+0000000191 00000 n 
+0000000199 00000 n 
+0000002833 00000 n 
+0000002840 00000 n 
+0000002848 00000 n 
+0000002961 00000 n 
+0000002968 00000 n 
+0000002976 00000 n 
+0000005214 00000 n 
+0000005221 00000 n 
+0000005229 00000 n 
+0000005342 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+5349
+%%EOF
