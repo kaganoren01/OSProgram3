@@ -99,35 +99,53 @@ public class TrianglesUtils {
             xCoords[k] = store.getX(k);
             yCoords[k] = store.getY(k);
         }
-        
+
+        return countRightTriangles(xCoords, yCoords, startIdx, endIdx);
+    }
+
+    /**
+     * Count right triangles using already-cached coordinate arrays.
+     * Intended for thread-based execution so coordinates are loaded once.
+     */
+    public static int countRightTriangles(int[] xCoords, int[] yCoords, int startIdx, int endIdx) {
+        int n = xCoords.length;
+        if (n != yCoords.length) {
+            throw new IllegalArgumentException("xCoords and yCoords must be the same length");
+        }
+        if (n < 3) return 0;
+
+        if (startIdx < 0) startIdx = 0;
+        if (endIdx > n) endIdx = n;
+        if (startIdx >= endIdx) return 0;
+
         int totalCount = 0;
-        
+
         // Check each point in the range as the right angle corner
         for (int i = startIdx; i < endIdx; i++) {
             int vertexX = xCoords[i];
             int vertexY = yCoords[i];
-            
+
             // Count how many points are in each direction from this corner
             // Pre-size HashMap to avoid rehashing (estimate: n/4 unique directions)
             Map<Direction, Integer> directionCounts = new HashMap<>((n + 2) / 3);
-            
+
             // Check all other points
             for (int j = 0; j < n; j++) {
                 if (i == j) continue; // Skip itself
-                
+
                 int otherX = xCoords[j];
                 int otherY = yCoords[j];
-                
+
                 // Find direction from corner to other point
-                long deltaX = (long)otherX - vertexX;
-                long deltaY = (long)otherY - vertexY;
-                
+                long deltaX = (long) otherX - vertexX;
+                long deltaY = (long) otherY - vertexY;
+
                 Direction dir = new Direction(deltaX, deltaY);
-                
+
                 // Add one to the count for this direction
                 directionCounts.put(dir, directionCounts.getOrDefault(dir, 0) + 1);
             }
-            
+
             // Count triangles with right angle at this corner
             // For each direction, check only the left perpendicular to avoid double-counting
             for (Map.Entry<Direction, Integer> entry : directionCounts.entrySet()) {
@@ -142,7 +160,7 @@ public class TrianglesUtils {
                 }
             }
         }
-        
+
         return totalCount;
     }
 

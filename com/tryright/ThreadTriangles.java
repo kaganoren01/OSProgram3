@@ -23,6 +23,10 @@ public class ThreadTriangles {
     // Shared memory: the PointStore (read-only for worker threads)
     private static PointStore store;
 
+    // Shared immutable cached coordinates (loaded once)
+    private static int[] xCoords;
+    private static int[] yCoords;
+
     public static void main(String[] args) {
         String filename = validateAndGetFilename(args);
         int numThreads = parseAndValidateThreadCount(args);
@@ -97,11 +101,22 @@ public class ThreadTriangles {
             return;
         }
 
-        // Limit threads to dataset size (no point having more threads than points)
-        int actualThreads = Math.min(numThreads, numPoints);
+        // Operational cap: don't exceed logical CPU cores (keep 256 as hard cap above)
+        int logicalCores = Math.max(1, Runtime.getRuntime().availableProcessors());
+
+        // Limit threads by dataset size and CPU cores
+        int actualThreads = Math.min(numThreads, Math.min(numPoints, logicalCores));
 
         // Allocate shared results array - each thread gets one slot
         results = new int[actualThreads];
+
+        // Load all points once so worker threads don't recopy them
+        xCoords = new int[numPoints];
+        yCoords = new int[numPoints];
+        for (int k = 0; k < numPoints; k++) {
+            xCoords[k] = store.getX(k);
+            yCoords[k] = store.getY(k);
+        }
 
         Thread[] workers = createWorkers(actualThreads, numPoints);
         startWorkers(workers);
@@ -124,7 +139,7 @@ public class ThreadTriangles {
 
             // Each thread reads from shared 'store' and writes to results[threadIndex]
             workers[i] = new Thread(null, () -> {
-                int count = TrianglesUtils.countRightTriangles(store, startIdx, endIdx);
+                int count = TrianglesUtils.countRightTriangles(xCoords, yCoords, startIdx, endIdx);
                 results[threadIndex] = count;
             }, "Worker-" + i, 512 * 1024); // 512KB stack
         }

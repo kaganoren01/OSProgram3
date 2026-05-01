@@ -3,8 +3,6 @@ package com.tryright;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * TextPointStore - reads points from text-encoded files
@@ -21,9 +19,6 @@ public class TextPointStore implements PointStore {
      * @param filename path to text-encoded file
      */
     public TextPointStore(String filename) throws IOException {
-        List<Integer> xList = new ArrayList<>();
-        List<Integer> yList = new ArrayList<>();
-        
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line = reader.readLine();
             
@@ -37,24 +32,33 @@ public class TextPointStore implements PointStore {
             } catch (NumberFormatException e) {
                 throw new IOException("First line must be an integer");
             }
+
+            if (expectedCount < 0) {
+                throw new IOException("First line must be a non-negative integer");
+            }
+
+            this.numPoints = expectedCount;
+            this.xCoords = new int[expectedCount];
+            this.yCoords = new int[expectedCount];
             
             int pointCount = 0;
-            while ((line = reader.readLine()) != null && pointCount < expectedCount) {
-                line = line.trim();
-                if (line.isEmpty()) {
-                    continue;
+            while (pointCount < expectedCount) {
+                line = reader.readLine();
+                if (line == null) {
+                    break;
                 }
-                
+
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
                 String[] parts = line.split("\\s+");
                 if (parts.length != 2) {
                     throw new IOException("Invalid point format: expected 'x y'");
                 }
-                
+
                 try {
-                    int x = Integer.parseInt(parts[0]);
-                    int y = Integer.parseInt(parts[1]);
-                    xList.add(x);
-                    yList.add(y);
+                    xCoords[pointCount] = Integer.parseInt(parts[0]);
+                    yCoords[pointCount] = Integer.parseInt(parts[1]);
                     pointCount++;
                 } catch (NumberFormatException e) {
                     throw new IOException("Invalid coordinate values");
@@ -64,16 +68,6 @@ public class TextPointStore implements PointStore {
             if (pointCount < expectedCount) {
                 throw new IOException("Expected " + expectedCount + " points but found only " + pointCount);
             }
-        }
-        
-        // Convert to arrays for fast access
-        this.numPoints = xList.size();
-        this.xCoords = new int[numPoints];
-        this.yCoords = new int[numPoints];
-        
-        for (int i = 0; i < numPoints; i++) {
-            xCoords[i] = xList.get(i);
-            yCoords[i] = yList.get(i);
         }
     }
     
