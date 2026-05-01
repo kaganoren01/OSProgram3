@@ -58,4 +58,4 @@ Binary format (`.dat`):
 
 Primary maintainer: Oren Kagan
 
-Additional group contributor: Charlie Davis
+Additional group contributor: Charlie Davis, Xain Alsaad
